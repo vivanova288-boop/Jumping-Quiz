@@ -2281,21 +2281,11 @@ function updatePreview() {
             return;
         }
         
-        // Полная перезагрузка iframe
-        iframe.src = 'about:blank';
+        // Используем srcdoc вместо src для надёжной работы
+        // srcdoc не имеет ограничений на длину и работает везде
+        iframe.srcdoc = html;
         
-        setTimeout(() => {
-            try {
-                // Используем data: URL вместо blob: для совместимости с GitHub Pages
-                const encodedHTML = encodeURIComponent(html);
-                iframe.src = 'data:text/html;charset=utf-8,' + encodedHTML;
-                
-                console.log('Preview updated successfully');
-            } catch (error) {
-                console.error('Error creating preview:', error);
-                alert('Ошибка создания предпросмотра: ' + error.message);
-            }
-        }, 50);
+        console.log('Preview updated successfully');
     } catch (error) {
         console.error('Error in updatePreview:', error);
         alert('Ошибка обновления предпросмотра: ' + error.message);
