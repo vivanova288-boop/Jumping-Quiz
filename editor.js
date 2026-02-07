@@ -2280,19 +2280,14 @@ function updatePreview() {
         
         setTimeout(() => {
             try {
-                const blob = new Blob([html], { type: 'text/html' });
-                const url = URL.createObjectURL(blob);
-                
-                // Добавляем уникальный параметр для предотвращения кэширования
-                iframe.src = url + '?t=' + Date.now();
-                
-                // Освобождаем память от старого URL через 5 секунд
-                setTimeout(() => URL.revokeObjectURL(url), 5000);
+                // Используем data: URL вместо blob: для совместимости с GitHub Pages
+                const encodedHTML = encodeURIComponent(html);
+                iframe.src = 'data:text/html;charset=utf-8,' + encodedHTML;
                 
                 console.log('Preview updated successfully');
-            } catch (blobError) {
-                console.error('Error creating blob:', blobError);
-                alert('Ошибка создания предпросмотра: ' + blobError.message);
+            } catch (error) {
+                console.error('Error creating preview:', error);
+                alert('Ошибка создания предпросмотра: ' + error.message);
             }
         }, 50);
     } catch (error) {
