@@ -53,38 +53,6 @@ function init() {
         });
     }
     
-    function updateLevelGraphicsUI() {
-        const count = parseInt(document.getElementById('levels-count').value);
-        const container = document.getElementById('level-graphics-container');
-        container.innerHTML = '';
-        
-        for (let i = 1; i <= count; i++) {
-            const levelDiv = document.createElement('div');
-            levelDiv.style.cssText = 'background: var(--panel); padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid var(--border);';
-            levelDiv.innerHTML = `
-                <div style="color: var(--accent); font-weight: bold; margin-bottom: 10px;">Уровень ${i}</div>
-                <label style="font-size: 10px;">Персонаж</label>
-                <input type="file" id="img-hero-${i}" accept="image/*" style="font-size: 10px; padding: 6px;">
-                <label style="font-size: 10px;">Платформа</label>
-                <input type="file" id="img-platform-${i}" accept="image/*" style="font-size: 10px; padding: 6px;">
-                <label style="font-size: 10px;">Фон</label>
-                <input type="file" id="img-bg-${i}" accept="image/*" style="font-size: 10px; padding: 6px;">
-                <label style="font-size: 10px;">Жизнь</label>
-                <input type="file" id="img-life-${i}" accept="image/*" style="font-size: 10px; padding: 6px;">
-            `;
-            container.appendChild(levelDiv);
-            
-            // Настраиваем обработчики для файлов уровня
-            setupFileInput(`img-hero-${i}`, `hero-${i}`);
-            setupFileInput(`img-platform-${i}`, `platform-${i}`);
-            setupFileInput(`img-bg-${i}`, `bg-${i}`);
-            setupFileInput(`img-life-${i}`, `life-${i}`);
-        }
-        
-        // Обновляем превью после добавления полей
-        setTimeout(updatePreview, 100);
-    }
-    
     // Настройка файловых инпутов
     setupFileInput('img-hero', 'hero');
     setupFileInput('img-platform', 'platform');
@@ -207,6 +175,44 @@ function setupFileInput(inputId, storageKey) {
             reader.readAsDataURL(file);
         }
     });
+}
+
+function updateLevelGraphicsUI() {
+    const count = parseInt(document.getElementById('levels-count').value);
+    const container = document.getElementById('level-graphics-container');
+    
+    if (!container) {
+        console.warn('level-graphics-container not found');
+        return;
+    }
+    
+    container.innerHTML = '';
+    
+    for (let i = 1; i <= count; i++) {
+        const levelDiv = document.createElement('div');
+        levelDiv.style.cssText = 'background: var(--panel); padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid var(--border);';
+        levelDiv.innerHTML = `
+            <div style="color: var(--accent); font-weight: bold; margin-bottom: 10px;">Уровень ${i}</div>
+            <label style="font-size: 10px;">Персонаж</label>
+            <input type="file" id="img-hero-${i}" accept="image/*" style="font-size: 10px; padding: 6px;">
+            <label style="font-size: 10px;">Платформа</label>
+            <input type="file" id="img-platform-${i}" accept="image/*" style="font-size: 10px; padding: 6px;">
+            <label style="font-size: 10px;">Фон</label>
+            <input type="file" id="img-bg-${i}" accept="image/*" style="font-size: 10px; padding: 6px;">
+            <label style="font-size: 10px;">Жизнь</label>
+            <input type="file" id="img-life-${i}" accept="image/*" style="font-size: 10px; padding: 6px;">
+        `;
+        container.appendChild(levelDiv);
+        
+        // Настраиваем обработчики для файлов уровня
+        setupFileInput(`img-hero-${i}`, `hero-${i}`);
+        setupFileInput(`img-platform-${i}`, `platform-${i}`);
+        setupFileInput(`img-bg-${i}`, `bg-${i}`);
+        setupFileInput(`img-life-${i}`, `life-${i}`);
+    }
+    
+    // Обновляем превью после добавления полей
+    setTimeout(updatePreview, 100);
 }
 
 function updateLevelsTabs() {
