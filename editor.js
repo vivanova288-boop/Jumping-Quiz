@@ -300,6 +300,26 @@ function updateQuestionsPreview() {
 }
 
 function buildGameHTML() {
+    // Функция для безопасного экранирования текста в JavaScript строках
+    const escapeText = (text) => {
+        if (!text) return '';
+        return text.replace(/\\/g, '\\\\')
+                   .replace(/"/g, '\\"')
+                   .replace(/\n/g, '\\n')
+                   .replace(/\r/g, '\\r')
+                   .replace(/\t/g, '\\t');
+    };
+    
+    // Функция для безопасного экранирования HTML
+    const escapeHTML = (text) => {
+        if (!text) return '';
+        return text.replace(/&/g, '&amp;')
+                   .replace(/</g, '&lt;')
+                   .replace(/>/g, '&gt;')
+                   .replace(/"/g, '&quot;')
+                   .replace(/'/g, '&#039;');
+    };
+    
     const title = document.getElementById('game-title')?.value || 'GAME';
     const welcomeText = document.getElementById('welcome-text')?.value || 'Ready to play?';
     const enableCountdown = document.getElementById('enable-countdown')?.checked ?? true;
@@ -319,6 +339,7 @@ function buildGameHTML() {
     const startButtonText = document.getElementById('start-button-text')?.value || 'START!';
     const retryButtonText = document.getElementById('retry-button-text')?.value || 'Try Again';
     const colorText = document.getElementById('color-text')?.value || '#ffffff';
+    const victoryMessage = document.getElementById('victory-message')?.value || 'Отличная работа!';
     
     const particleDirection = document.getElementById('particle-direction')?.value || 'down';
     const globalParticleSize = document.getElementById('global-particle-size')?.value || 100;
@@ -370,7 +391,7 @@ function buildGameHTML() {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${title}</title>
+<title>${escapeHTML(title)}</title>
 <style>
 :root {
     --water1: #2bbcd6;
@@ -890,8 +911,8 @@ button {
 </div>
 
 <div id="start-screen">
-    <h1>${title}</h1>
-    <p>${welcomeText}</p>
+    <h1>${escapeHTML(title)}</h1>
+    <p>${escapeHTML(welcomeText)}</p>
     <button id="start-button" onclick="hideStartScreen()">${startButtonText}</button>
 </div>
 
@@ -900,10 +921,10 @@ ${enableCountdown ? `<div id="countdown-overlay" style="display: none; position:
 </div>` : ''}
 
 <div id="ui-layer">
-    <div id="header">${title}</div>
+    <div id="header">${escapeHTML(title)}</div>
     <div id="lives-container"></div>
     <div id="question-box">
-        <div id="q-text"><b>${welcomeText}</b></div>
+        <div id="q-text"><b>${escapeHTML(welcomeText)}</b></div>
         <div class="timer-bar"><div id="timer-fill"></div></div>
     </div>
 </div>
@@ -943,10 +964,10 @@ const LEVEL_GRAPHICS = ${JSON.stringify(levelGraphics)};
 const TIMER_DURATION = ${timerDuration};
 const ENABLE_TIMER = ${enableTimer};
 const ENABLE_COUNTDOWN = ${enableCountdown};
-const VICTORY_TEXT = "${victoryText}";
-const VICTORY_MESSAGE = "${document.getElementById('victory-message')?.value || 'Отличная работа!'}";
+const VICTORY_TEXT = "${escapeText(victoryText)}";
+const VICTORY_MESSAGE = "${escapeText(victoryMessage)}";
 const VICTORY_HERO_IMAGE = "${gameData['victory-hero'] || ''}";
-const GAMEOVER_TEXT = "${gameoverText}";
+const GAMEOVER_TEXT = "${escapeText(gameoverText)}";
 const VICTORY_EFFECT = "${victoryEffect}";
 const GAME_LANGUAGE = "${gameLanguage}";
 const PARTICLE_DIRECTION = "${particleDirection}";
